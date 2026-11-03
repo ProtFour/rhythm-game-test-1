@@ -1,0 +1,22 @@
+name: Build Mac App
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-level: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install pygame pyinstaller
+      - name: Build with PyInstaller
+        run: |
+          python3 -m PyInstaller --onefile --noconsole --add-data "play-pretend.mp3:." main.py
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-app
+          path: dist/main.app
